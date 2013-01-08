@@ -1,0 +1,14 @@
+Method,Server,Collection,File,Document,Version,SavedQuery,Calendar,BulletinBoard,Bulletin,Weblog,WeblogEntry,Wiki,WikiPage,URL,User,Group,Description
+CreateObject,A,A,A,A,A,,A,A,A,A,A,A,A,,,A,Create a child object
+DSCopy,,A,A,A,,A,A,A,A,A,A,A,A,A,A,A,Copy reference of item
+DSCreate,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,,Create representing item in DocuShare
+DSDelete,,A,A,A,,A,A,A,A,A,A,A,A,A,A,A,Delete or disown item
+DSDownload,,A,A,A,A,,,,,,,,,A,,,Download contents of file item
+DSEdit,,,A,A,,,,,,,,,,,,,Run an associated editor*
+DSLoadChildren,A,A,A,A,A,,A,A,A,A,A,A,A,,,A,Load child items of container item
+DSLoadProps,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Load properties of item
+DSLock,,,A,A,,,,,,,,,,,,,Lock or unlock file item
+DSMove,,A,A,A,,A,A,A,A,A,A,A,A,A,A,A,Move item
+DSSaveProps,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Save properties of item
+DSSelect,,A,A,A,,A,A,A,A,A,A,A,A,A,A,A,Select item from browser dialog
+DSUpload,,A,A,A,A,,,,,,,,,,,,Upload contents of file item

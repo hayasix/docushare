@@ -1,0 +1,5 @@
+include README
+include LICENSE
+include setup.py dsview.py
+include docushare/*.py
+include docushare/properties.csv docushare/methods.csv

@@ -1,0 +1,85 @@
+Property,DataType,Access,DSLoadProps,DSSaveProps,Server,Collection,File,Document,Version,SavedQuery,Calendar,BulletinBoard,Bulletin,Weblog,WeblogEntry,Wiki,WikiPage,URL,User,Group,Description
+Abstract,String,R/W,A,,,,A,A,,,,,,,,,,,,,Machine generated summary
+Author,String,R/W,A,A,,,A,A,,,,,,,,,,,,,Author of file item
+BackgroundImage,String,R/W,A,A,,A,,,,,,,,,,,,,,,URL of background image
+Comment,String,R/W,,,,,A,A,A,,,,,,,,,,,,File item version comments
+Description,String,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Long description of item
+Handle,String,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,"DocuShare item handle, for example, File-123"
+HandleNum,Integer,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,ItemÅfs handle number
+IsLocked,Boolean,R/W,A,,,,A,A,,,,,,,,,,,,,File item is locked or not
+IsReadOnly,Boolean,R/W,A,,A,,,,,,,,,,,,,,,,Item is read-only or not
+Keywords,String,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Keywords for item
+Length,Integer,R/W,A,,A,A,A,A,A,A,,,,,,,,,,A,Length of collection or file item
+Logo,String,R/W,A,A,,A,,,,,,,,,,,,,,,Length of collection or file item
+MaxVersions,Integer,R/W,A,A,,,A,A,,,,,,,,,,,,,Maximum number of file item versions
+MimeType,String,R/W,A,A,,,A,A,A,,,,,,,,,,,,File item MIME type
+Name,String,R/W,A,,,A,A,A,A,,,,,,,,,,A,,File or user item Name
+Owner,String,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,OwnerÅfs DocuShare handle
+OwnerNum,Integer,R/W,A,A,,,,,,,,,,,,,,,,,OwnerÅfs handle number
+ParentHandle,Integer,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,,Primary parentÅfd Item handle
+ParentType,String,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Primary parentÅfs item type ID
+ParentTypeNum,Integer,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Numeric parent type ID
+ParentHandleNum,Integer,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Numeric parent handle
+ParentCount,Integer,R,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,,Number of parents
+SortOrder,String,R/W,A,A,,,,,,,,,,,,,,,,,Collection itemÅfs sort order
+Summary,String,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Brief summary of item
+TimeAccessed,Date,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Time when item was last accessed
+TimeCreated,Date,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Time when item was created
+TimeModified,Date,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Time when item was last modified
+Title,String,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Display name of item
+Type,String,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Returns a string description of the ItemObj type
+TypeNum,Integer,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Item's type number
+URL,String,R/W,A,A,,,,,,,,,,,,,,A,,,URL value of URL item
+User,String,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,UserÅfs DocuShare handle
+UserNum,Integer,R/W,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,UserÅfs handle number
+ValidatedFileName,String,R,A,,,,A,A,A,,,,,,,,,,,,File itemÅfs qualified filename
+VersionNum,Integer,R/W,,,,,,,A,,,,,,,,,,,,File itemÅfs version number
+Icon,Object,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Icon resource of item
+Thumbnail,Object,R/W,,,,,A,A,,,,,,,,,,,,,Thumbnail picture of file item
+TypeIndex,Integer,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,ItemÅfs Icon type index
+CustomProp,Variant,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Custom propertyÅfs arbitrary type
+Data,Variant,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Custom data for private use
+ExcludedCoreProps,Integer,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Set of flags for common properties
+ExcludedProps,Integer,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Set of flags for type-specific properties
+AutoDelete,Boolean,R/W,,,,,A,A,,,,,,,,,,,,,Can delete attached downloaded file
+DSErrorCode,Integer,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Gateway error code
+DSGatewayMode,Integer,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Gateway mode settings
+DSServerMapId,Integer,R/W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Instance ID of associated server map
+Reload,Boolean,R/W,,,,,A,A,,,,,,,,,,,,,"Can reload Thumbnail, Picture, or VersionNum; or causes DSDownload to call DSLoadProps internally for downloading a compound document."
+TaskStatus,Integer,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Status of the current asynchronous task
+ModifiedBy,String,R/W,A,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Name of the user who last modified the item
+ModifiedByNum,Integer,R/W,A,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Handle of the user who last modified the item
+LockedBy,String,R/W,A,,,,A,A,A,,,,,,,,,,,,Name of the user who locked the item
+LockedByNum,Integer,R/W,A,,,,A,A,A,,,,,,,,,,,,Handle of the user who locked the item
+AccessControlGrants,Integer,R/W,,,,,,,,,,,,,,,,,A,A,This userÅfs access control grants for the parent object
+SchemaEnumerator,Object,R/W,,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Property schema enumerator
+XMLDOM,Object,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,XML representation of properties
+IsPrivate,Boolean,R/W,A,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,DocuShare property ÅfprivateÅf
+StatusObject,Object,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Displays progress in DocuShare processing
+ErrorReportObject,Object,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Holds error information from DocuShare
+NameConflictResolver,Object,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Runs a resolution dialog
+Options,Integer,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Controls ItemObj behavior
+Contents,Variant,R/W,,,,,A,A,A,,,,,,,,,,,,Content data of file item
+AlternateRendition,Object,R/W,,,,,A,A,A,,,,,,,,,,,,Alternate (2nd) rendition of a compound document
+PreferredRendition,Object,R/W,,,,,A,A,A,,,,,,,,,,,,Preferred (1st) rendition of a compound document
+ReferrerItemObject,Object,R/W,,,,,A,A,A,,,,,,,,,,,,File that refers to this ItemObj
+ParentItemObject,Object,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,ItemObj representation of primary parent item
+CompoundContainer,Object,R/W,,,,A,A,A,A,,,,,,,,,,,,Collection that holds attachments
+ClientProp,String,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Special property defined by a client application and stored in DocuShare client_data property
+CorePropIds,Integer,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Core property IDs for this object
+PropIds,Integer,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Type specific property IDs for this object
+Server,Object,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Server object
+Picture,Object,R,,,,,A,A,A,,,,,,,,,,,,Visual representation of an image file
+Prop,Variant,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Accesses a property of ItemObj by name
+Filename,String,R/W,A,,,,A,A,A,,,,,,,,,,,,DocuShare property ÅfdocumentÅf
+IsContainer,Boolean,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,"True, if the item is a container type"
+IsCustomType,Boolean,R,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,"True, if the item is a custom object type derived from a standard object type, for example, File"
+HighestVersionUsed,Integer,R/W,A,,,,A,A,,,,,,,,,,,,,DocuShare property Åfhighest_version_us edÅf
+RequiredPropsAreSet,Boolean,R,,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Indicates whether all required DocuShare properties have a non-empty value
+ObjectTypeNum,Integer,R,,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,DSX_OBJTYPE number that corredponds to this ItemObj
+BaseTypeNum,Integer,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Numeric base type ID
+BaseType,String,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Base type from which this ItemObj item was derived
+ContainerItemObject,Object,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Container of this ItemObj item
+LocalProp,Variant,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A property temporary in scope and local to this ItemObj
+TypeId,String,R/W,,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,Numeric type ID of this ItemObj item
+ExpirationDate,Date,R/W,A,A,,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,DocuShare property Åfexpiration_dateÅf
