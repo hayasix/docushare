@@ -13,21 +13,15 @@ WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 FOR A PARTICULAR PURPOSE.
 """
 
-from .dsclient import *
-from .object import DSObject, register, getclass
+from . import dsclient
+from .object import DSIterable, register
 
 
 __all__ = ("Collection",)
 
 
 @register
-class Collection(DSObject):
+class Collection(DSIterable):
     """DocuShare Collection"""
 
-    def __iter__(self):
-        status = self.DSLoadChildren()
-        chain = self._dsobject.EnumObjects(DSCONTF_CHILDREN)
-        chain.Reset()
-        while chain.NextPos:
-            obj = chain.NextItem
-            yield getclass(obj.Type)(obj)
+    subobject_types = dsclient.DSCONTF_CHILDREN

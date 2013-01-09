@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.6
 # vim: fileencoding=cp932 fileformat=dos
 
-"""server  -  DochShare Server
+"""server  -  DochShare Server, or root folder
 
 Copyright (C) 2012 HAYASI Hideki <linxs@linxs.org>  All rights reserved.
 
@@ -14,14 +14,15 @@ FOR A PARTICULAR PURPOSE.
 """
 
 
-from .object import register
-from .collection import Collection
+from . import dsclient
+from .object import DSIterable, register
 
 
 __all__ = ("Server",)
 
 
 @register
-class Server(Collection):
-    """DocuShare Server"""
-    pass
+class Server(DSIterable):
+    """DocuShare Server, or root folder"""
+
+    subobject_types = dsclient.DSCONTF_CHILDREN

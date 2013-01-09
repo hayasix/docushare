@@ -17,18 +17,16 @@ FOR A PARTICULAR PURPOSE.
 __author__ = "HAYASI Hideki"
 __copyright__ = "Copyright (C) 2012 HAYASI Hideki <linxs@linxs.org>"
 __license__ = "ZPL 2.1"
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __email__ = "linxs@linxs.org"
 __status__ = "Development"
 
 
-from .object import DSObject
 from .client import Client
 from .server import Server
 from .user import User
 from .group import Group
-from .file import File
-from .document import Document
+from .file import Version, File  # synonym = document.Document
 from .collection import Collection
 from .bulletinboard import Bulletin, BulletinBoard
 from .weblog import WeblogEntry, Weblog

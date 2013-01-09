@@ -13,8 +13,8 @@ WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 FOR A PARTICULAR PURPOSE.
 """
 
-from .object import DSObject, register
-from .collection import Collection
+from . import dsclient
+from .object import DSObject, DSIterable, register
 
 
 __all__ = ("WeblogEntry", "Weblog")
@@ -26,5 +26,6 @@ class WeblogEntry(DSObject):
 
 
 @register
-class Weblog(Collection):
-    pass
+class Weblog(DSIterable):
+
+    subobject_types = dsclient.DSCONTF_CHILDREN

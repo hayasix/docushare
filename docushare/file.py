@@ -13,17 +13,27 @@ WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 FOR A PARTICULAR PURPOSE.
 """
 
-from .object import DSObject, register
+from . import dsclient
+from .object import DSObject, DSIterable, register
 
 
-__all__ = ("File",)
+__all__ = ("Version", "File")
 
 
 @register
-class File(DSObject):
+class Version(DSObject):
+    """DocuShare File Version"""
+
+    pass
+
+
+@register
+class File(DSIterable):
     """DocuShare File"""
 
-    def download(self, path=None):
+    subobject_types = dsclient.DSCONTF_VERSIONS
+
+    def checkout(self, path=None, lock=True):
         """Lock file and download it.
 
         path        (str) pathname of downloaded file
@@ -32,7 +42,7 @@ class File(DSObject):
         """
         if path:
             self.Name = path
-        self.DSDownload(DSAXES_FLAG_DOWNLOADLOCKED)
+        self.DSDownload(dsclient.DSAXES_FLAG_DOWNLOADLOCKED)
         return self.Name
 
     def update(self, path=None):

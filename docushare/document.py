@@ -13,15 +13,23 @@ WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 FOR A PARTICULAR PURPOSE.
 """
 
-from .object import DSObject, register
+# DocuShare Client treats Document's as File's.
+# Use file.py instead of this module.
+raise NotImplementedError
+
+
+from . import dsclient
+from .object import DSIterable, register
 
 
 __all__ = ("Document",)
 
 
 @register
-class Document(DSObject):
+class Document(DSIterable):
     """DocuShare Document"""
+
+    subobject_types = dsclient.DSCONTF_VERSIONS
 
     def download(self, path=None):
         """Lock file and download it.
@@ -32,7 +40,7 @@ class Document(DSObject):
         """
         if path:
             self.Name = path
-        self.DSDownload(DSAXES_FLAG_DOWNLOADLOCKED)
+        self.DSDownload(dsclient.DSAXES_FLAG_DOWNLOADLOCKED)
         return self.Name
 
     def update(self, path=None):

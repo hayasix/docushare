@@ -13,48 +13,60 @@ WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 FOR A PARTICULAR PURPOSE.
 """
 
-import os
-import datetime
-import csv
+import os.path
+#from pywintypes import Time as PyTime
 
-from .dsclient import *
+from . import dsclient
 
 
-__all__ = ("DSObject", "register", "getclass")
+__all__ = ("DSObject", "DSIterable", "register", "getclass")
 
 
 DSTYPES = dict()
 DSOBJECT_PROPERTIES = dict()
 PROPERTY_DESCRIPTION = dict()
-PROPERTY_TABLE = os.path.join(os.path.split(__file__)[0], "properties.csv")
-METHOD_TABLE = os.path.join(os.path.split(__file__)[0], "methods.csv")
+PROPERTY_TABLE = "properties.csv"
+METHOD_TABLE = "methods.csv"
 STRICT = False
 
-def _read_property_table(path):
+
+def _read_property_tables(*paths):
+    import csv
     objtypes = ("Server Collection File Document Version SavedQuery Calendar"
                 " BulletinBoard Bulletin Weblog WeblogEntry Wiki WikiPage"
                 " URL User Group").split()
-    with open(path) as f:
-        reader = csv.reader(f)
-        header = reader.next()
-        typepos = dict()
-        for pos, name in enumerate(header):
-            if name in objtypes:
-                typepos[name] = pos
-                if name not in DSOBJECT_PROPERTIES:
-                    DSOBJECT_PROPERTIES[name] = []
-        for row in reader:
-            propname = row[0]
-            #datatype = row[1]
-            #writable = (row[2] == "R/W")
-            #loadable = (row[3] == "A")
-            #savable = (row[4] == "A")
-            for typename, pos in typepos.items():
-                if row[pos] == "A":
-                    DSOBJECT_PROPERTIES[typename].append(propname)
-            PROPERTY_DESCRIPTION[propname] = row[-1]
-_read_property_table(PROPERTY_TABLE)
-_read_property_table(METHOD_TABLE)
+    for path in paths:
+        path = os.path.join(os.path.split(__file__)[0], path)
+        with open(path) as table:
+            reader = csv.reader(table)
+            header = reader.next()
+            typepos = dict()
+            for pos, typename in enumerate(header):
+                if typename in objtypes:
+                    typepos[typename] = pos
+                    if typename not in DSOBJECT_PROPERTIES:
+                        DSOBJECT_PROPERTIES[typename] = []
+            for row in reader:
+                propname = row[0]
+                #datatype = row[1]
+                #writable = (row[2] == "R/W")
+                #loadable = (row[3] == "A")
+                #savable = (row[4] == "A")
+                for typename, pos in typepos.items():
+                    if row[pos] == "A":
+                        DSOBJECT_PROPERTIES[typename].append(propname)
+                PROPERTY_DESCRIPTION[propname] = row[-1]
+_read_property_tables(PROPERTY_TABLE, METHOD_TABLE)
+del _read_property_tables
+
+DSNUMTYPE = (
+        "Root Server Collection File Version "
+        "Calendar BulletinBoard URL Bulletin SavedQuery "
+        "Event Rendition DocVersion Subscription User "
+        "Group Unknown Object ContElem MailMessage "
+        "Workspace Wiki Weblog"
+        ).split()
+DSTYPENUM = dict((n, p) for (p, n) in enumerate(DSNUMTYPE))
 
 
 def register(klass):
@@ -63,13 +75,16 @@ def register(klass):
 
 
 def getclass(type):
-    return DSTYPES[type]
+    if isinstance(type, basestring):
+        return DSTYPES[type]
+    if isinstance(type, (int, long, float)):
+        return DSTYPES.get(DSNUMTYPE[type], DSObject)
 
 
-def checkpropertyname(obj, name):
-    if name not in DSOBJECT_PROPERTIES[obj.__class__.__name__]:
+def checkpropertyname(obj, propname):
+    if propname not in DSOBJECT_PROPERTIES[obj.__class__.__name__]:
         raise AttributeError("{0} has no attribute '{1}'".format(
-                obj.__class__.__name__, name))
+                obj.__class__.__name__, propname))
 
 
 class DSObject(object):
@@ -144,3 +159,17 @@ class DSObject(object):
         else:
             status = obj.DSCreate()
         return obj.Handle
+
+
+class DSIterable(DSObject):
+    """Base class for iterable DocuShare objects"""
+
+    subobject_types = dsclient.DSCONTF_CHILDREN
+
+    def __iter__(self):
+        status = self.DSLoadChildren()
+        chain = self.EnumObjects(self.__class__.subobject_types)
+        chain.Reset()
+        while chain.NextPos:
+            obj = chain.NextItem
+            yield getclass(obj.TypeNum)(obj)
