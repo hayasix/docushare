@@ -14,7 +14,7 @@ FOR A PARTICULAR PURPOSE.
 """
 
 from . import dsclient
-from .object import DSObject, DSIterable, register
+from .object import DSObject, DSContainer, register
 
 
 __all__ = ("WeblogEntry", "Weblog")
@@ -26,6 +26,6 @@ class WeblogEntry(DSObject):
 
 
 @register
-class Weblog(DSIterable):
+class Weblog(DSContainer):
 
     subobject_types = dsclient.DSCONTF_CHILDREN

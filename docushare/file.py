@@ -14,7 +14,7 @@ FOR A PARTICULAR PURPOSE.
 """
 
 from . import dsclient
-from .object import DSObject, DSIterable, register
+from .object import DSObject, DSContainer, register
 
 
 __all__ = ("Version", "File")
@@ -28,7 +28,7 @@ class Version(DSObject):
 
 
 @register
-class File(DSIterable):
+class File(DSContainer):
     """DocuShare File"""
 
     subobject_types = dsclient.DSCONTF_VERSIONS

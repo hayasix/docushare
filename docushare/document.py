@@ -19,14 +19,14 @@ raise NotImplementedError
 
 
 from . import dsclient
-from .object import DSIterable, register
+from .object import DSContainer, register
 
 
 __all__ = ("Document",)
 
 
 @register
-class Document(DSIterable):
+class Document(DSContainer):
     """DocuShare Document"""
 
     subobject_types = dsclient.DSCONTF_VERSIONS

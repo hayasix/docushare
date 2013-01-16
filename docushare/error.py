@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.6
 # vim: fileencoding=cp932 fileformat=dos
 
-"""wiki  -  DochShare Wiki object
+"""error  -  DochShare Client (DSAXES) error names
 
 Copyright (C) 2012 HAYASI Hideki <linxs@linxs.org>  All rights reserved.
 
@@ -14,18 +14,23 @@ FOR A PARTICULAR PURPOSE.
 """
 
 from . import dsclient
-from .object import DSObject, DSContainer, register
 
 
-__all__ = ("WikiPage", "Wiki")
+__all__ = ("DSError", "errmsg", "try_")
 
 
-@register
-class WikiPage(DSObject):
+ERRORNAMES = dict((v, k) for (k, v) in dsclient.__dict__.items()
+                                    if k.startswith("DSAXES_E_"))
+
+def errmsg(n):
+    return ERRORNAMES.get(n, "UNDEFINED_ERROR")
+
+
+class DSError(Exception):
     pass
 
 
-@register
-class Wiki(DSContainer):
-
-    subobject_types = dsclient.DSCONTF_CHILDREN
+def try_(rc):
+    if rc < 0:
+        raise DocuShareError(errmsg(rc))
+    return rc

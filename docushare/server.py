@@ -15,14 +15,14 @@ FOR A PARTICULAR PURPOSE.
 
 
 from . import dsclient
-from .object import DSIterable, register
+from .object import DSContainer, register
 
 
 __all__ = ("Server",)
 
 
 @register
-class Server(DSIterable):
+class Server(DSContainer):
     """DocuShare Server, or root folder"""
 
     subobject_types = dsclient.DSCONTF_CHILDREN

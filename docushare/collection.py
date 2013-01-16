@@ -14,14 +14,14 @@ FOR A PARTICULAR PURPOSE.
 """
 
 from . import dsclient
-from .object import DSIterable, register
+from .object import DSContainer, register
 
 
 __all__ = ("Collection",)
 
 
 @register
-class Collection(DSIterable):
+class Collection(DSContainer):
     """DocuShare Collection"""
 
     subobject_types = dsclient.DSCONTF_CHILDREN

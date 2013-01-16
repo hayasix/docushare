@@ -17,9 +17,10 @@ import os.path
 #from pywintypes import Time as PyTime
 
 from . import dsclient
+from .error import try_
 
 
-__all__ = ("DSObject", "DSIterable", "register", "getclass")
+__all__ = ("DSObject", "DSContainer", "register", "getclass")
 
 
 DSTYPES = dict()
@@ -59,13 +60,15 @@ def _read_property_tables(*paths):
 _read_property_tables(PROPERTY_TABLE, METHOD_TABLE)
 del _read_property_tables
 
-DSNUMTYPE = (
+DSNUMTYPE = dict(enumerate((
         "Root Server Collection File Version "
         "Calendar BulletinBoard URL Bulletin SavedQuery "
         "Event Rendition DocVersion Subscription User "
         "Group Unknown Object ContElem MailMessage "
         "Workspace Wiki Weblog"
-        ).split()
+        ).split()))
+DSNUMTYPE[34] = "WikiPage"
+DSNUMTYPE[35] = "WeblogEntry"
 DSTYPENUM = dict((n, p) for (p, n) in enumerate(DSNUMTYPE))
 
 
@@ -79,6 +82,7 @@ def getclass(type):
         return DSTYPES[type]
     if isinstance(type, (int, long, float)):
         return DSTYPES.get(DSNUMTYPE[type], DSObject)
+    raise ValueError("illegal type '{0}'".format(repr(type)))
 
 
 def checkpropertyname(obj, propname):
@@ -94,10 +98,14 @@ class DSObject(object):
         self._dsobject = obj
 
     def __repr__(self):
-        return self.Handle
+        if hasattr(self, "Handle"):
+            return self.Handle
+        return "<DSObject at 0x{0:x}>".format(id(self))
 
     def __str__(self):
-        return u"{0}({1})".format(self.Handle, self.Title)
+        if hasattr(self, "Handle"):
+            return u"{0}({1})".format(self.Handle, self.Title)
+        return "<DSObject at {0:x}>".format(id(self))
 
     def __getattribute__(self, name):
         if name[0].isupper():
@@ -111,14 +119,30 @@ class DSObject(object):
             setattr(object.__getattribute__(self, "_dsobject"), name, value)
         object.__setattr__(self, name, value)
 
+    @property
     def properties(self):
         return sorted(DSOBJECT_PROPERTIES[self.__class__.__name__])
 
-    def add(self,
-            type="File",
-            title="Untitled",
-            parent=None,
-            **kw):
+
+class DSContainer(DSObject):
+    """Base class for DocuShare object container like Collection"""
+
+    subobject_types = dsclient.DSCONTF_CHILDREN
+
+    def __iter__(self):
+        try_(self.DSLoadChildren())
+        chain = self.EnumObjects(self.__class__.subobject_types)
+        chain.Reset()
+        while chain.NextPos:
+            obj = chain.NextItem
+            yield getclass(obj.TypeNum)(obj)
+
+    def dir(self):
+        """Show object handles and titles in this container on console."""
+        for obj in self:
+            print "{0}: {1}".format(obj.Handle, obj.Title)
+
+    def add(self, type="File", title="Untitled", parent=None, **kw):
         """Add a child object.
 
         type        (str) DocuShare object type e.g. 'Collection', 'File'
@@ -155,21 +179,7 @@ class DSObject(object):
         for (k, v) in kw.items():
             setattr(obj, k.capitalize(), v)
         if "name" in kw:
-            status = obj.DSUpload()
+            try_(obj.DSUpload())
         else:
-            status = obj.DSCreate()
+            try_(obj.DSCreate())
         return obj.Handle
-
-
-class DSIterable(DSObject):
-    """Base class for iterable DocuShare objects"""
-
-    subobject_types = dsclient.DSCONTF_CHILDREN
-
-    def __iter__(self):
-        status = self.DSLoadChildren()
-        chain = self.EnumObjects(self.__class__.subobject_types)
-        chain.Reset()
-        while chain.NextPos:
-            obj = chain.NextItem
-            yield getclass(obj.TypeNum)(obj)

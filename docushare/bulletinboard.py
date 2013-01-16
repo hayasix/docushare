@@ -14,7 +14,7 @@ FOR A PARTICULAR PURPOSE.
 """
 
 from . import dsclient
-from .object import DSObject, DSIterable, register
+from .object import DSObject, DSContainer, register
 
 
 __all__ = ("Bulletin", "BulletinBoard")
@@ -27,6 +27,6 @@ class Bulletin(DSObject):
 
 
 @register
-class BulletinBoard(DSIterable):
+class BulletinBoard(DSContainer):
 
     subobject_types = dsclient.DSCONTF_CHILDREN
