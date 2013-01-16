@@ -23,10 +23,11 @@ __all__ = ("Bulletin", "BulletinBoard")
 @register
 class Bulletin(DSObject):
 
-    pass
+    typenum = dsclient.DSXITEMTYPE_BULLETIN
 
 
 @register
 class BulletinBoard(DSContainer):
 
+    typenum = dsclient.DSXITEMTYPE_BBOARD
     subobject_types = dsclient.DSCONTF_CHILDREN

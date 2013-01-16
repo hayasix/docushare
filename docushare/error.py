@@ -32,5 +32,5 @@ class DSError(Exception):
 
 def try_(rc):
     if rc < 0:
-        raise DocuShareError(errmsg(rc))
+        raise DSError(errmsg(rc))
     return rc

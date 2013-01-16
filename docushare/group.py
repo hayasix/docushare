@@ -23,4 +23,5 @@ __all__ = ("Group",)
 @register
 class Group(DSObject):
 
+    typenum = dsclient.DSXITEMTYPE_GROUP
     subobject_types = dsclient.DSCONTF_CHILDREN

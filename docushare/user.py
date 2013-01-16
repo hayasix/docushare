@@ -13,6 +13,7 @@ WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 FOR A PARTICULAR PURPOSE.
 """
 
+from . import dsclient
 from .object import DSObject, register
 
 
@@ -21,4 +22,5 @@ __all__ = ("User",)
 
 @register
 class User(DSObject):
-    pass
+
+    typenum = dsclient.DSXITEMTYPE_USER

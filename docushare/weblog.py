@@ -22,10 +22,13 @@ __all__ = ("WeblogEntry", "Weblog")
 
 @register
 class WeblogEntry(DSObject):
+
+    # typenum = dsclient.DSXITEMTYPE_WEBLOGENTRY  # is not valid.
     pass
 
 
 @register
 class Weblog(DSContainer):
 
+    typenum = dsclient.DSXITEMTYPE_WEBLOG
     subobject_types = dsclient.DSCONTF_CHILDREN

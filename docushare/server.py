@@ -25,4 +25,5 @@ __all__ = ("Server",)
 class Server(DSContainer):
     """DocuShare Server, or root folder"""
 
+    typenum = dsclient.DSXITEMTYPE_SERVER
     subobject_types = dsclient.DSCONTF_CHILDREN

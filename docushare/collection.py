@@ -24,4 +24,5 @@ __all__ = ("Collection",)
 class Collection(DSContainer):
     """DocuShare Collection"""
 
+    typenum = dsclient.DSXITEMTYPE_COLLECTION
     subobject_types = dsclient.DSCONTF_CHILDREN

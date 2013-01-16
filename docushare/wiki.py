@@ -22,10 +22,13 @@ __all__ = ("WikiPage", "Wiki")
 
 @register
 class WikiPage(DSObject):
+
+    #typenum = dsclient.DSXITEMTYPE_WIKIPAGE  # is not valid.
     pass
 
 
 @register
 class Wiki(DSContainer):
 
+    typenum = dsclient.DSXITEMTYPE_WIKI
     subobject_types = dsclient.DSCONTF_CHILDREN

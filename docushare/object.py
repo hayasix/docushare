@@ -15,6 +15,7 @@ FOR A PARTICULAR PURPOSE.
 
 import os.path
 #from pywintypes import Time as PyTime
+import win32com.client
 
 from . import dsclient
 from .error import try_
@@ -166,19 +167,23 @@ class DSContainer(DSObject):
         """
         if type not in DSTYPES:
             raise TypeError("illegal DocuShare object type '{0}'".format(type))
-        obj = self.CreateObject(type)
-        obj = DSTYPES[type](obj)
+        if "path" in kw:
+            obj = win32com.client.Dispatch("DSITEMENUMLib.ItemObj")
+            kw["Name"] = kw["path"]
+            del kw["path"]
+        else:
+            obj = self.CreateObject(type)
+        obj.TypeNum = getclass(type).typenum
         obj.Title = title
-        parent = parent or self.Handle  # Put it as a child of this object.
-        if not isinstance(parent, basestring):
+        if parent is None:
+            parent = self.Handle
+        elif not isinstance(parent, basestring):
             parent = parent.Handle
         obj.ParentHandle = parent
-        if "path" in kw:
-            kw["name"] = kw["path"]
-            del kw["path"]
-        for (k, v) in kw.items():
+        for k, v in kw.items():
             setattr(obj, k.capitalize(), v)
-        if "name" in kw:
+        if "Name" in kw:
+            print dir(obj)
             try_(obj.DSUpload())
         else:
             try_(obj.DSCreate())

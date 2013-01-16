@@ -31,6 +31,7 @@ class Version(DSObject):
 class File(DSContainer):
     """DocuShare File"""
 
+    typenum = dsclient.DSXITEMTYPE_DOCUMENT
     subobject_types = dsclient.DSCONTF_VERSIONS
 
     def checkout(self, path=None, lock=True):
