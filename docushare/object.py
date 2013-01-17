@@ -165,10 +165,13 @@ class DSContainer(DSObject):
 
             new_object = DSObject.add(path=r'C:\UploadFiles\example.doc')
         """
+        type = type.capitalize()
         if type not in DSTYPES:
             raise TypeError("illegal DocuShare object type '{0}'".format(type))
         if "path" in kw:
-            obj = win32com.client.Dispatch("DSITEMENUMLib.ItemObj")
+            if type != "File":
+                raise ValueError("type='File' required, '{0}' given")
+            obj = self.CreateObject("File")
             kw["Name"] = kw["path"]
             del kw["path"]
         else:
@@ -183,8 +186,7 @@ class DSContainer(DSObject):
         for k, v in kw.items():
             setattr(obj, k.capitalize(), v)
         if "Name" in kw:
-            print dir(obj)
             try_(obj.DSUpload())
         else:
             try_(obj.DSCreate())
-        return obj.Handle
+        return obj
