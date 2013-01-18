@@ -79,8 +79,10 @@ class Server(DSContainer):
                 data = type
         if root is not None:
             flags |= dsclient.DSSRCH_SCOPE_COLL
+            if not isinstance(root, (basestring, int, long, float)):
+                root = root.Handle
             if isinstance(root, basestring) and root.startswith("Collection-"):
-                root = root[len("Collection-"):]
+                    root = root[len("Collection-"):]
             gw.DSCollHandle = int(root)
         mode = mode.upper()
         if mode == "AND":

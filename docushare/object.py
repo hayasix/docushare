@@ -124,6 +124,10 @@ class DSObject(object):
     def properties(self):
         return sorted(DSOBJECT_PROPERTIES[self.__class__.__name__])
 
+    def delete(self):
+        """Delete or unown the DocuShare object."""
+        try_(self.DSDelete())
+
 
 class DSContainer(DSObject):
     """Base class for DocuShare object container like Collection"""
