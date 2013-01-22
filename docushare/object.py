@@ -21,7 +21,7 @@ from . import dsclient
 from .error import try_
 
 
-__all__ = ("DSObject", "DSContainer", "register", "getclass")
+__all__ = ("DSObject", "DSContainer", "register", "getclass", "customproperty")
 
 
 DSTYPES = dict()
@@ -92,6 +92,40 @@ def checkpropertyname(obj, propname):
                 obj.__class__.__name__, propname))
 
 
+DSAXES_PROPTYPES = dict(
+        bin=dsclient.DSAXES_PROPTYPE_BINARY,
+        str=dsclient.DSAXES_PROPTYPE_STRING,
+        text=dsclient.DSAXES_PROPTYPE_TEXT,
+        url=dsclient.DSAXES_PROPTYPE_URL,
+        bool=dsclient.DSAXES_PROPTYPE_BOOLEAN,
+        int=dsclient.DSAXES_PROPTYPE_INTEGER,
+        float=dsclient.DSAXES_PROPTYPE_FLOAT,
+        menu=dsclient.DSAXES_PROPTYPE_MENU,
+        date=dsclient.DSAXES_PROPTYPE_DATE,
+        email=dsclient.DSAXES_PROPTYPE_EMAIL,
+        password=dsclient.DSAXES_PROPTYPE_PASSWORD,
+        handle=dsclient.DSAXES_PROPTYPE_HANDLE,
+        handlereference=dsclient.DSAXES_PROPTYPE_HANDLEREFERENCE,
+        ace=dsclient.DSAXES_PROPTYPE_ACE,
+        file=dsclient.DSAXES_PROPTYPE_FILE,
+        day=dsclient.DSAXES_PROPTYPE_DAY,
+        time=dsclient.DSAXES_PROPTYPE_TIME,
+        date_iso8601=dsclient.DSAXES_PROPTYPE_DATE_ISO8601,
+        license=dsclient.DSAXES_PROPTYPE_LICENSE,
+        handlelist=dsclient.DSAXES_PROPTYPE_HANDLELIST,
+        multivalued=dsclient.DSAXES_PROPTYPE_MULTIVALUED,
+        )
+
+
+def customproperty(name, type=dsclient.DSAXES_PROPTYPE_STRING):
+    type = DSAXES_PROPTYPES.get(type, type)
+    return property(
+        #lambda self: self.GetCustomProp(name, type),  # getter
+        lambda self: self.Prop(name),  # getter
+        lambda self, value: self.SetCustomProp(name, type, value),  # setter
+        )
+
+
 class DSObject(object):
     """DocuShare Object"""
 
@@ -109,16 +143,20 @@ class DSObject(object):
         return "<DSObject at {0:x}>".format(id(self))
 
     def __getattribute__(self, name):
-        if name[0].isupper():
+        try:
+            return object.__getattribute__(self, name)
+        except AttributeError:
+            if not name[0].isupper(): raise
             if STRICT: checkpropertyname(self, name)
             return getattr(object.__getattribute__(self, "_dsobject"), name)
-        return object.__getattribute__(self, name)
 
     def __setattr__(self, name, value):
-        if name[0].isupper():
+        try:
+            object.__setattr__(self, name, value)
+        except AttributeError:
+            if not name[0].isupper(): raise
             if STRICT: checkpropertyname(self, name)
             setattr(object.__getattribute__(self, "_dsobject"), name, value)
-        object.__setattr__(self, name, value)
 
     @property
     def properties(self):
@@ -127,6 +165,14 @@ class DSObject(object):
     def delete(self):
         """Delete or unown the DocuShare object."""
         try_(self.DSDelete())
+
+    def load(self):
+        """Load property values."""
+        self.DSLoadProps()
+
+    def save(self):
+        """Save property values."""
+        self.DSSaveProps()
 
 
 class DSContainer(DSObject):

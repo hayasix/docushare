@@ -14,7 +14,7 @@ FOR A PARTICULAR PURPOSE.
 """
 
 from . import dsclient
-from .object import DSObject, register
+from .object import DSObject, register, customproperty
 
 
 __all__ = ("Group",)
@@ -25,3 +25,6 @@ class Group(DSObject):
 
     typenum = dsclient.DSXITEMTYPE_GROUP
     subobject_types = dsclient.DSCONTF_CHILDREN
+
+    ChangeAccess = customproperty(
+            "change_access", dsclient.DSAXES_PROPTYPE_BOOLEAN)

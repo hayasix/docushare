@@ -62,6 +62,13 @@ class Server(DSContainer):
         DSContainer.__init__(self, servermap.CreateObject("Server"))
         self._ds = servermap
 
+    def __call__(self, handle, load=True):
+        obj = self.CreateObject(handle)
+        obj = getclass(obj.Type)(obj)
+        if load:
+            obj.load()
+        return obj
+
     @property
     def search_properties(self):
         """Returns all property names for search criteria."""

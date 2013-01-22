@@ -43,12 +43,24 @@ class File(DSContainer):
         """
         if path:
             self.Name = path
-        self.DSDownload(dsclient.DSAXES_FLAG_DOWNLOADLOCKED)
+        flags = dsclient.DSAXES_FLAG_DOWNLOADREPR  # representative version
+        if lock:
+            flags |= dsclient.DSAXES_FLAG_DOWNLOADLOCKED
+        self.DSDownload(flags)
         return self.Name
 
-    def update(self, path=None):
+    def download(self, path=None):
+        """Download file, i.e. checkout without locking."""
+        self.checkout(path=path, lock=False)
+
+    def update(self, path=None, lock=False):
         """Update the file of DocuShare File object.
 
         path        (str) pathname to upload file
         """
-        self.DSUpload()
+        if path:
+            self.Name = path
+        flags = dsclient.DSAXES_FLAG_DOWNLOADREPR  # representative version
+        if lock:
+            flags |= dsclient.DSAXES_FLAG_UPLOADLOCKED
+        self.DSUpload(flags)

@@ -14,7 +14,7 @@ FOR A PARTICULAR PURPOSE.
 """
 
 from . import dsclient
-from .object import DSObject, DSContainer, register
+from .object import DSObject, DSContainer, register, customproperty
 
 
 __all__ = ("Bulletin", "BulletinBoard")
@@ -31,3 +31,5 @@ class BulletinBoard(DSContainer):
 
     typenum = dsclient.DSXITEMTYPE_BBOARD
     subobject_types = dsclient.DSCONTF_CHILDREN
+
+    Expire = customproperty("expire", dsclient.DSAXES_PROPTYPE_MENU)

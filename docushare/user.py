@@ -14,7 +14,7 @@ FOR A PARTICULAR PURPOSE.
 """
 
 from . import dsclient
-from .object import DSObject, register
+from .object import DSObject, register, customproperty
 
 
 __all__ = ("User",)
@@ -24,3 +24,15 @@ __all__ = ("User",)
 class User(DSObject):
 
     typenum = dsclient.DSXITEMTYPE_USER
+
+    FirstName = customproperty("first_name")
+    LastName = customproperty("last_name")
+    Email = customproperty("email")
+    MailStop = customproperty("mailstop")
+    Phone = customproperty("phone")
+    Password = customproperty("password")
+    LastLogin = customproperty("last_login")
+    Homepage = customproperty("homepage")
+
+    UseUploadHelper = customproperty(
+            "use_upload_helper", dsclient.DSAXES_PROPTYPE_MENU)
