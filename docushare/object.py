@@ -143,20 +143,16 @@ class DSObject(object):
         return "<DSObject at {0:x}>".format(id(self))
 
     def __getattribute__(self, name):
-        try:
-            return object.__getattribute__(self, name)
-        except AttributeError:
-            if not name[0].isupper(): raise
+        if name[0].isupper():
             if STRICT: checkpropertyname(self, name)
             return getattr(object.__getattribute__(self, "_dsobject"), name)
+        return object.__getattribute__(self, name)
 
     def __setattr__(self, name, value):
-        try:
-            object.__setattr__(self, name, value)
-        except AttributeError:
-            if not name[0].isupper(): raise
+        if name[0].isupper():
             if STRICT: checkpropertyname(self, name)
             setattr(object.__getattribute__(self, "_dsobject"), name, value)
+        object.__setattr__(self, name, value)
 
     @property
     def properties(self):

@@ -34,33 +34,39 @@ class File(DSContainer):
     typenum = dsclient.DSXITEMTYPE_DOCUMENT
     subobject_types = dsclient.DSCONTF_VERSIONS
 
-    def checkout(self, path=None, lock=True):
+    def checkout(self, lock=True):
         """Lock file and download it.
 
-        path        (str) pathname of downloaded file
+        lock        (bool)
 
         Returns the actual pathname of downloaded file.
+        Currently only the representative version of file can be acquired.
         """
-        if path:
-            self.Name = path
-        flags = dsclient.DSAXES_FLAG_DOWNLOADREPR  # representative version
+        flags = dsclient.DSAXES_FLAG_DOWNLOADREPR  # Representative version.
         if lock:
             flags |= dsclient.DSAXES_FLAG_DOWNLOADLOCKED
         self.DSDownload(flags)
+        self.load()  # Refresh properties.
         return self.Name
 
-    def download(self, path=None):
-        """Download file, i.e. checkout without locking."""
-        self.checkout(path=path, lock=False)
+    def download(self):
+        """Download file, i.e. checkout without locking.
 
-    def update(self, path=None, lock=False):
-        """Update the file of DocuShare File object.
-
-        path        (str) pathname to upload file
+        Returns the actual pathname of downloaded file.
         """
-        if path:
-            self.Name = path
-        flags = dsclient.DSAXES_FLAG_DOWNLOADREPR  # representative version
-        if lock:
-            flags |= dsclient.DSAXES_FLAG_UPLOADLOCKED
-        self.DSUpload(flags)
+        return self.checkout(lock=False)
+
+    def update(self):
+        """Update the file of DocuShare File object."""
+        self.DSUpload()
+        f.load()  # Refresh properties.
+
+    def lock(self, lock=True):
+        """Lock file."""
+        self.DSLock(lock)
+        self.load()  # Refresh properties.
+
+    def unlock(self):
+        """Unlock file."""
+        self.DSLock(False)
+        self.load()  # Refresh properties.
