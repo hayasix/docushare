@@ -37,7 +37,7 @@ class File(DSContainer):
     def checkout(self, lock=True):
         """Lock file and download it.
 
-        lock        (bool)
+        lock        (bool) lock file
 
         Returns the actual pathname of downloaded file.
         Currently only the representative version of file can be acquired.
@@ -56,13 +56,21 @@ class File(DSContainer):
         """
         return self.checkout(lock=False)
 
-    def update(self):
-        """Update the file of DocuShare File object."""
+    def update(self, unlock=True):
+        """Update the file of DocuShare File object.
+
+        unlock      (bool) release file lock
+        """
         self.DSUpload()
-        f.load()  # Refresh properties.
+        if unlock:
+            self.unlock()
+        self.load()  # Refresh properties.
 
     def lock(self, lock=True):
-        """Lock file."""
+        """Lock file.
+
+        lock        (bool) lock file
+        """
         self.DSLock(lock)
         self.load()  # Refresh properties.
 

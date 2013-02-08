@@ -189,11 +189,12 @@ class DSContainer(DSObject):
         for obj in self:
             print "{0}: {1}".format(obj.Handle, obj.Title)
 
-    def add(self, type="File", title="Untitled", parent=None, **kw):
+    def add(self, type="File", title=None, parent=None, **kw):
         """Add a child object.
 
         type        (str) DocuShare object type e.g. 'Collection', 'File'
-        title       (unicode) title of created object; default='Untitled'
+        title       (unicode or None) title of created object; None='Untitled';
+                    if `path=' is given, None=(basename of path)
         parent      (None, str or DocuShare object) parent object; None=self
         **kw        (dict) attributes of created object; case is ignored but
                     recommended to be capitalized in each attribute name
@@ -219,11 +220,12 @@ class DSContainer(DSObject):
                 raise ValueError("type='File' required, '{0}' given")
             obj = self.CreateObject("File")
             kw["Name"] = kw["path"]
+            title = title or os.path.basename(kw["path"])
             del kw["path"]
         else:
             obj = self.CreateObject(type)
         obj.TypeNum = getclass(type).typenum
-        obj.Title = title
+        obj.Title = title or u"Untitled"
         if parent is None:
             parent = self.Handle
         elif not isinstance(parent, basestring):
