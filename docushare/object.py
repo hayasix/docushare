@@ -216,25 +216,29 @@ class DSContainer(DSObject):
         if type not in DSTYPES:
             raise TypeError("illegal DocuShare object type '{0}'".format(type))
         if "path" in kw:
-            if type != "File":
-                raise ValueError("type='File' required, '{0}' given")
-            obj = self.CreateObject("File")
+            if type not in ("File", "Version"):
+                raise ValueError(
+                        "type='File' required, '{0}' given".format(type))
+            obj = self.CreateObject(type) if type == "File" else self
             kw["Name"] = kw["path"]
             title = title or os.path.basename(kw["path"])
             del kw["path"]
         else:
+            if type == "Version":
+                raise ValueError("pathname is required to add a new Version")
             obj = self.CreateObject(type)
-        obj.TypeNum = getclass(type).typenum
-        obj.Title = title or u"Untitled"
-        if parent is None:
-            parent = self.Handle
-        elif not isinstance(parent, basestring):
-            parent = parent.Handle
-        obj.ParentHandle = parent
+        if type != "Version":
+            obj.TypeNum = getclass(type).typenum
+            obj.Title = title or u"Untitled"
+            if parent is None:
+                parent = self.Handle
+            elif not isinstance(parent, basestring):
+                parent = parent.Handle
+            obj.ParentHandle = parent
         for k, v in kw.items():
             setattr(obj, k.capitalize(), v)
         if "Name" in kw:
             try_(obj.DSUpload())
         else:
             try_(obj.DSCreate())
-        return obj
+        return obj.Handle

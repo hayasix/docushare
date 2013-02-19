@@ -15,6 +15,7 @@ FOR A PARTICULAR PURPOSE.
 
 from . import dsclient
 from .object import DSObject, DSContainer, register
+from .error import try_
 
 
 __all__ = ("Version", "File")
@@ -24,7 +25,7 @@ __all__ = ("Version", "File")
 class Version(DSObject):
     """DocuShare File Version"""
 
-    pass
+    typenum = dsclient.DSXITEMTYPE_DOCVERSION
 
 
 @register
@@ -78,3 +79,25 @@ class File(DSContainer):
         """Unlock file."""
         self.DSLock(False)
         self.load()  # Refresh properties.
+
+    def add(self, path, **kw):
+        """Add a new Version of File/Document.
+
+        path        (unicode) pathname of the file to upload
+        **kw        (dict) attributes of created Version; case is ignored but
+                    recommended to be capitalized in each attribute name
+
+        Returns the alias of created Version handle such as `File-1234/8'.
+        Digits following '/' represents the version number.  You can get the
+        created Version object as:
+
+            version_handle_alias = self.add(path='...')
+            version = server(version_handle_alias)
+        """
+        if not path:
+            raise ValueError("pathname if required")
+        self.Name = path
+        for k, v in kw.items():
+            setattr(self, k.capitalize(), v)
+        try_(self.DSUpload())
+        return max(self, key=lambda v: v.VersionNum)

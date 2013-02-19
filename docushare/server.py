@@ -64,7 +64,13 @@ class Server(DSContainer):
 
     def __call__(self, handle, load=True):
         obj = self.CreateObject(handle)
-        obj = getclass(obj.Type)(obj)
+        cls = obj.Type
+        try:
+            if obj.VersionNum:
+                cls = "Version"
+        except AttributeError:
+            pass
+        obj = getclass(cls)(obj)
         if load:
             obj.load()
         return obj
