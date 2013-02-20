@@ -88,16 +88,16 @@ class File(DSContainer):
                     recommended to be capitalized in each attribute name
 
         Returns the alias of created Version handle such as `File-1234/8'.
-        Digits following '/' represents the version number.  You can get the
-        created Version object as:
+        Digits following '/' represents the (maximum) version number.
+        You can get the created Version object by Server.__call__() as:
 
             version_handle_alias = self.add(path='...')
             version = server(version_handle_alias)
         """
         if not path:
-            raise ValueError("pathname if required")
+            raise ValueError("pathname is required")
         self.Name = path
         for k, v in kw.items():
             setattr(self, k.capitalize(), v)
         try_(self.DSUpload())
-        return max(self, key=lambda v: v.VersionNum)
+        return max(self, key=lambda v: v.VersionNum).Handle

@@ -206,39 +206,19 @@ class DSContainer(DSObject):
         For example, object.Title, object.MimeType and object.Mimetype are
         valid Docushare object attributes.  object.title is a normal Python
         object attribute and may cause AttributeError.
-
-        You can add a new File/Document object by uploading an existing local
-        file.  To do so, place an keyword argument `path='.  For example:
-
-            new_object = DSObject.add(path=r'C:\UploadFiles\example.doc')
         """
         type = type.capitalize()
         if type not in DSTYPES:
             raise TypeError("illegal DocuShare object type '{0}'".format(type))
-        if "path" in kw:
-            if type not in ("File", "Version"):
-                raise ValueError(
-                        "type='File' required, '{0}' given".format(type))
-            obj = self.CreateObject(type) if type == "File" else self
-            kw["Name"] = kw["path"]
-            title = title or os.path.basename(kw["path"])
-            del kw["path"]
-        else:
-            if type == "Version":
-                raise ValueError("pathname is required to add a new Version")
-            obj = self.CreateObject(type)
-        if type != "Version":
-            obj.TypeNum = getclass(type).typenum
-            obj.Title = title or u"Untitled"
-            if parent is None:
-                parent = self.Handle
-            elif not isinstance(parent, basestring):
-                parent = parent.Handle
-            obj.ParentHandle = parent
+        obj = self.CreateObject(type)
+        obj.TypeNum = getclass(type).typenum
+        obj.Title = title or u"Untitled"
+        if parent is None:
+            parent = self.Handle
+        elif not isinstance(parent, basestring):
+            parent = parent.Handle
+        obj.ParentHandle = parent
         for k, v in kw.items():
             setattr(obj, k.capitalize(), v)
-        if "Name" in kw:
-            try_(obj.DSUpload())
-        else:
-            try_(obj.DSCreate())
+        try_(obj.DSCreate())
         return obj.Handle
