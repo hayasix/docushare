@@ -32,3 +32,12 @@ class Wiki(DSContainer):
 
     typenum = dsclient.DSXITEMTYPE_WIKI
     subobject_types = dsclient.DSCONTF_CHILDREN
+
+    def add(self, title, **kw):
+        """Add a WeblogEntry of Weblog.
+
+        title       (unicode)
+        Summary     (unicode)
+        Description (unicode)
+        """
+        DSContainer.add(self, "WeblogEntry", Title=title, **kw)

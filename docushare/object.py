@@ -143,16 +143,28 @@ class DSObject(object):
         return "<DSObject at {0:x}>".format(id(self))
 
     def __getattribute__(self, name):
-        if name[0].isupper():
+        try:
+            return object.__getattribute__(self, name)
+        except AttributeError:
+            pass
+        try:
             if STRICT: checkpropertyname(self, name)
             return getattr(object.__getattribute__(self, "_dsobject"), name)
-        return object.__getattribute__(self, name)
+        except AttributeError:
+            raise AttributeError("'{0}' object has no attribute '{1}'".format(
+                    self.__class__.__name__, name))
 
     def __setattr__(self, name, value):
-        if name[0].isupper():
+        try:
             if STRICT: checkpropertyname(self, name)
             setattr(object.__getattribute__(self, "_dsobject"), name, value)
-        object.__setattr__(self, name, value)
+        except AttributeError:
+            pass
+        try:
+            object.__setattr__(self, name, value)
+        except AttributeError:
+            raise AttributeError("'{0}' object has no attribute '{1}'".format(
+                    self.__class__.__name__, name))
 
     @property
     def properties(self):
@@ -184,22 +196,43 @@ class DSContainer(DSObject):
             obj = chain.NextItem
             yield getclass(obj.TypeNum)(obj)
 
-    def dir(self):
-        """Show object handles and titles in this container on console."""
-        for obj in self:
+    def dir(self, key="DisplayName"):
+        """Show object handles and titles in this container on console.
+
+        key     (str) sort key; DocuShare object attribute name or:
+                    'N'=DisplayName (default), 'S'=Length,
+                    'C'=TimeCreated, 'M' or 'T'=TimeModified
+        """
+        if key:
+            key = {
+                    "A": "TimeAccessed",
+                    "C": "TimeCreated",
+                    "M": "TimeModified",
+                    "N": "DisplayName",
+                    "S": "Length",
+                    "T": "TimeModified",
+                    }.get(key[0].upper(), key)
+            for key in [key, "Title", "TimeModified", "TimeCreated"]:
+                try:
+                    lst = sorted(self, key=lambda member: getattr(member, key))
+                    break
+                except AttributeError:
+                    pass
+            else:
+                raise AttributeError("can't sort '{0}' objects".format(
+                        self.__class__.__name__))
+        else:
+            lst = self
+        for obj in lst:
             print "{0}: {1}".format(obj.Handle, obj.Title)
 
-    def add(self, type="File", title=None, parent=None, **kw):
+    def add(self, type, **kw):
         """Add a child object.
 
         type        (str) DocuShare object type e.g. 'Collection', 'File'
-        title       (unicode or None) title of created object; None='Untitled';
-                    if `path=' is given, None=(basename of path)
-        parent      (None, str or DocuShare object) parent object; None=self
-        **kw        (dict) attributes of created object; case is ignored but
-                    recommended to be capitalized in each attribute name
+        **kw        (dict) attributes to create object
 
-        Returns the handle of created Docushare object.
+        Returns the created DocuShare object.
 
         Each **kw key is a DocuShare object attribute name, e.g. 'Title' or
         'MimeType'.  Note that such attribute names should be capitalized.
@@ -210,15 +243,26 @@ class DSContainer(DSObject):
         type = type.capitalize()
         if type not in DSTYPES:
             raise TypeError("illegal DocuShare object type '{0}'".format(type))
+        cls = getclass(type)
         obj = self.CreateObject(type)
-        obj.TypeNum = getclass(type).typenum
-        obj.Title = title or u"Untitled"
-        if parent is None:
-            parent = self.Handle
-        elif not isinstance(parent, basestring):
-            parent = parent.Handle
-        obj.ParentHandle = parent
-        for k, v in kw.items():
-            setattr(obj, k.capitalize(), v)
-        try_(obj.DSCreate())
-        return obj.Handle
+        obj.TypeNum = cls.typenum
+        obj.ParentHandle = self.Handle
+        if "path" in kw:
+            if "Name" in kw:
+                raise ValueError("path and Name cannot be passed together")
+            upload = True
+            obj.Name = kw["path"]
+            del kw["path"]
+        else:
+            upload = False
+        for k in kw.keys():
+            if k in cls.upload_attributes:
+                setattr(obj, k, kw[k])
+                del kw[k]
+        if upload:
+            try_(obj.DSUpload())
+        else:
+            try_(obj.DSCreate())
+        for k in kw:
+            setattr(obj, k, kw[k])
+        return cls(obj)
