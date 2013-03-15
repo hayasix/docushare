@@ -109,7 +109,7 @@ class File(DSContainer):
                 del kw[k]
         try_(self.DSUpload())
         version = Server(self.Server)("{0}/{1}".format(
-                self.Type, self.HighestVersionUsed))
+                self.Handle, self.HighestVersionUsed))
         for k in kw:
             setattr(self, k, kw[k])
         return version

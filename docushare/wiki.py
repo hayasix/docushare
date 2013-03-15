@@ -36,8 +36,14 @@ class Wiki(DSContainer):
     def add(self, title, **kw):
         """Add a WeblogEntry of Weblog.
 
-        title       (unicode)
-        Summary     (unicode)
-        Description (unicode)
+        **kw        (dict) attributes to create object
+
+        Returns the created WeblogEntry.
+
+        Each **kw key is a DocuShare object attribute name, e.g. 'Title' or
+        'MimeType'.  Note that such attribute names should be capitalized.
+        For example, object.Title, object.MimeType and object.Mimetype are
+        valid Docushare object attributes.  object.title is a normal Python
+        object attribute and may cause AttributeError.
         """
-        DSContainer.add(self, "WeblogEntry", Title=title, **kw)
+        DSContainer.add(self, type="WeblogEntry", **kw)

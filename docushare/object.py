@@ -226,10 +226,10 @@ class DSContainer(DSObject):
         for obj in lst:
             print "{0}: {1}".format(obj.Handle, obj.Title)
 
-    def add(self, type, **kw):
+    def add(self, type=None, **kw):
         """Add a child object.
 
-        type        (str) DocuShare object type e.g. 'Collection', 'File'
+        type        (str) DocuShare object type; None='File' or 'Collection'
         **kw        (dict) attributes to create object
 
         Returns the created DocuShare object.
@@ -240,29 +240,29 @@ class DSContainer(DSObject):
         valid Docushare object attributes.  object.title is a normal Python
         object attribute and may cause AttributeError.
         """
+        if "path" in kw:
+            if "Name" in kw:
+                raise ValueError("path and Name cannot be passed together")
+            kw["Name"] = kw["path"]
+            del kw["path"]
+        if type is None:
+            if not ("path" in kw or "Name" in kw):
+                raise TypeError("can't determine object type")
+            path = kw.get("path", kw.get("Name"))
+            type = "Collection" if os.path.isdir(path) else "File"
         type = type.capitalize()
         if type not in DSTYPES:
-            raise TypeError("illegal DocuShare object type '{0}'".format(type))
+            raise TypeError("can't add '{0}' object".format(type))
         cls = getclass(type)
         obj = self.CreateObject(type)
         obj.TypeNum = cls.typenum
         obj.ParentHandle = self.Handle
-        if "path" in kw:
-            if "Name" in kw:
-                raise ValueError("path and Name cannot be passed together")
-            upload = True
-            obj.Name = kw["path"]
-            del kw["path"]
-        else:
-            upload = False
+        upload = "Name" in kw
         for k in kw.keys():
             if k in cls.upload_attributes:
                 setattr(obj, k, kw[k])
                 del kw[k]
-        if upload:
-            try_(obj.DSUpload())
-        else:
-            try_(obj.DSCreate())
+        try_(obj.DSUpload() if upload else obj.DSCreate())
         for k in kw:
             setattr(obj, k, kw[k])
         return cls(obj)
