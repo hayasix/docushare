@@ -182,6 +182,48 @@ class DSObject(object):
         """Save property values."""
         self.DSSaveProps()
 
+    def move(self, dest):
+        """Move DocuShare object into a container object.
+
+        dest        (str) desitination DSContainer object handle
+                    (DSContainer) destination DSContainer object
+        """
+        from .server import Server
+        server = Server(self.Server)
+        if isinstance(dest, basestring):
+            dest = server(dest)
+        self.DSMove(dest)
+        self._dsobject = server(self.Handle)  # dispose cached object
+
+    def copy(self, dest, deep=False):
+        """Copy DocuShare object into a container object.
+
+        dest        (str) desitination DSContainer object handle
+                    (DSContainer) destination DSContainer object
+        deep        (bool) False=reference copy, True=contents copy;
+                    valid only for File and Collection instances
+
+        Note that new objects are created only when deep=True.  A reference
+        copy, or shallow copy, means just to add a new parent location.
+
+        If deep=True and dest has an File/Document with the same Title as
+        self, contents are copied as a new Version.
+
+        CAUTION: In contents copy, only standard properties are copied.
+                 Custom properties are NOT copied.
+        """
+        from .server import Server
+        server = Server(self.Server)
+        if isinstance(dest, basestring):
+            dest = server(dest)
+        flags = (dsclient.DSAXES_MODE_COPYCONTENTS |
+                 dsclient.DSAXES_MODE_CREATERESULTENUM)
+        if deep:
+            self.DSGatewayMode |= flags
+        else:
+            self.DSGatewayMode &= ~ flags
+        self.DSCopy(dest)
+
 
 class DSContainer(DSObject):
     """Base class for DocuShare object container like Collection"""
