@@ -1,0 +1,8 @@
+System Requirements
+-------------------
+
+- DocuShare Client 6.5.1 build 26+
+    http://docushare.xerox.com/downloads/client/english.html
+- Python 2.6+
+- Python Win32 Extensions
+    http://starship.python.net/~skippy/win32/

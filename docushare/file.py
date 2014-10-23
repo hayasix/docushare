@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python2.7
 # vim: fileencoding=cp932 fileformat=dos
 
 """file  -  DochShare File object
@@ -27,7 +27,7 @@ class Version(DSObject):
     """DocuShare File Version"""
 
     typenum = dsclient.DSXITEMTYPE_DOCVERSION
-    upload_attributes = ("Name", "Comment")
+    upload_attributes = ("Name", "Comment", "Title")
 
     def checkout(self, path=None):
         """Lock file and download it.

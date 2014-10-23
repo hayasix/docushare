@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python2.7
 # vim: fileencoding=cp932 fileformat=dos
 
 """DochShare Client Package
@@ -17,7 +17,7 @@ FOR A PARTICULAR PURPOSE.
 __author__ = "HAYASI Hideki"
 __copyright__ = "Copyright (C) 2012 HAYASI Hideki <linxs@linxs.org>"
 __license__ = "ZPL 2.1"
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __email__ = "linxs@linxs.org"
 __status__ = "Development"
 

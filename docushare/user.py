@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python2.7
 # vim: fileencoding=cp932 fileformat=dos
 
 """user  -  DochShare User

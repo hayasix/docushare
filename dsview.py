@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python2.7
 # vim: fileencoding=cp932 fileformat=dos
 
 import os
@@ -8,7 +8,7 @@ from ConfigParser import SafeConfigParser
 from docushare.client import Client
 
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 DEFAULT_CONF = "~/docushare.ini"
 DOCUSHARE_SECTION = "DocuShare"
@@ -49,7 +49,7 @@ def main():
     server = client.connect(opts.username, opts.password, opts.domain)
 
     for obj in server:
-        print "{handle}: {title}".format(
+        print u"{handle}: {title}".format(
                 handle=obj.Handle, title=obj.Title)
 
 
