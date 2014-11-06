@@ -17,7 +17,7 @@ FOR A PARTICULAR PURPOSE.
 __author__ = "HAYASI Hideki"
 __copyright__ = "Copyright (C) 2012 HAYASI Hideki <linxs@linxs.org>"
 __license__ = "ZPL 2.1"
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 __email__ = "linxs@linxs.org"
 __status__ = "Development"
 

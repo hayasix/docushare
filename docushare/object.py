@@ -266,7 +266,7 @@ class DSContainer(DSObject):
         else:
             lst = self
         for obj in lst:
-            print "{0}: {1}".format(obj.Handle, obj.Title)
+            print u"{0}: {1}".format(obj.Handle, obj.Title)
 
     def add(self, type=None, **kw):
         """Add a child object.
